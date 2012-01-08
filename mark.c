@@ -187,11 +187,11 @@ static void clear_marks_for_block(struct hblk *h, word dummy)
 }
 
 /* Slow but general routines for setting/clearing/asking about mark bits */
-GC_INNER void GC_set_mark_bit(ptr_t p)
+GC_API void GC_CALL GC_set_mark_bit(void *p)
 {
     struct hblk *h = HBLKPTR(p);
     hdr * hhdr = HDR(h);
-    word bit_no = MARK_BIT_NO(p - (ptr_t)h, hhdr -> hb_sz);
+    word bit_no = MARK_BIT_NO((ptr_t)p - (ptr_t)h, hhdr -> hb_sz);
 
     if (!mark_bit_from_hdr(hhdr, bit_no)) {
       set_mark_bit_from_hdr(hhdr, bit_no);
@@ -199,11 +199,11 @@ GC_INNER void GC_set_mark_bit(ptr_t p)
     }
 }
 
-GC_INNER void GC_clear_mark_bit(ptr_t p)
+GC_API void GC_CALL GC_clear_mark_bit(void *p)
 {
     struct hblk *h = HBLKPTR(p);
     hdr * hhdr = HDR(h);
-    word bit_no = MARK_BIT_NO(p - (ptr_t)h, hhdr -> hb_sz);
+    word bit_no = MARK_BIT_NO((ptr_t)p - (ptr_t)h, hhdr -> hb_sz);
 
     if (mark_bit_from_hdr(hhdr, bit_no)) {
       size_t n_marks;
@@ -221,11 +221,11 @@ GC_INNER void GC_clear_mark_bit(ptr_t p)
     }
 }
 
-GC_bool GC_is_marked(ptr_t p)
+GC_API int GC_CALL GC_is_marked(void *p)
 {
     struct hblk *h = HBLKPTR(p);
     hdr * hhdr = HDR(h);
-    word bit_no = MARK_BIT_NO(p - (ptr_t)h, hhdr -> hb_sz);
+    word bit_no = MARK_BIT_NO((ptr_t)p - (ptr_t)h, hhdr -> hb_sz);
 
     return((GC_bool)mark_bit_from_hdr(hhdr, bit_no));
 }
